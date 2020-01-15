@@ -5,10 +5,12 @@ if ("rstudioapi" %in% rownames(installed.packages())){
 } else { # not running from Rstudio, use a common path
   if (.Platform$OS.type == "windows") { 
     project.wd <- file.path(Sys.getenv("LOCALAPPDATA"),"nrc.documents")
+    #project.wd <- file.path(Sys.getenv("LOCALAPPDATA"),"LocalWorking","NRC_ADAMS_Metadata","NRC_ADAMS_Metadata-master","nrc.documents")
   } else {
     project.wd <- file.path(Sys.getenv("HOME"),"nrc.documents")
   }
 }
+
 if (!dir.exists(project.wd)){
   dir.create(project.wd,recursive = TRUE)
 }
