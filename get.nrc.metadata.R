@@ -1,14 +1,35 @@
+r <- getOption("repos")
+r["CRAN"] <- "https://mirrors.nics.utk.edu/cran/" 
+options(repos=r)
+
+if (!"xml2" %in% rownames(installed.packages())){
+  install.packages("xml2")
+}
+if (!"curl" %in% rownames(installed.packages())){
+  install.packages("curl")
+}
+if (!"gtools" %in% rownames(installed.packages())){
+  install.packages("gtools")
+}
+if (!"lubridate" %in% rownames(installed.packages())){
+  install.packages("lubridate")
+}
+if (!"timeDate" %in% rownames(installed.packages())){
+  install.packages("timeDate")
+}
+
+
 download.nrc.document.meta <- function(days,data.directory,fGetHourly=FALSE){
   # days <- seq(from=as.Date("12/23/2004",format="%m/%d/%Y"), to=as.Date(Sys.Date()+1),by='days' )
   for(intDay in seq_along(days)){
     # U.S. Nuclear Regulatory Commission public documents
     # See page 16 of https://www.nrc.gov/site-help/developers/wba-api-developer-guide.pdf
-    # Find all reports by date range to the NRC’s public library 
+    # Find all reports by date range to the NRCâ€™s public library 
     strMonth <- format(days[intDay],"%m")
     strYear <- format(days[intDay],"%y")
     nrc.var.name <- paste0("nrc.document.",format(days[intDay],"%Y_%m_%d"))
-    nrc.xml.filename <- paste0(file.path(data.directory,nrc.var.name,".xml"))
-    nrc.rdata.filename <-paste0(file.path(data.directory,nrc.var.name,".Rdata"))
+    nrc.xml.filename <- paste0(file.path(data.directory,nrc.var.name),".xml")
+    nrc.rdata.filename <-paste0(file.path(data.directory,nrc.var.name),".Rdata")
     # Resume where we left off
     if (file.exists(nrc.rdata.filename)){
       print(paste0("Loading:",nrc.rdata.filename))
@@ -100,7 +121,9 @@ download.nrc.document.meta <- function(days,data.directory,fGetHourly=FALSE){
       }
     }
     if(exists("nrc.rows")){
-      if ((!exists("nrc.document.results"))|is.null(nrc.document.results)){
+      if (!exists("nrc.document.results")){
+        nrc.document.results <-nrc.rows
+      } else if (is.null(nrc.document.results)){
         nrc.document.results <-nrc.rows
       } else {
         nrc.document.results <- gtools::smartbind(nrc.document.results,nrc.rows)
