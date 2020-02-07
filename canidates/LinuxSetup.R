@@ -13,15 +13,17 @@ file.remove("tmp.list.txt")
 corrected.list <- c("Package_Name",as.vector(new.package.list$Package_Name))
 list.with.dependancies <- pkgDep(corrected.list)
 # Create temporary folder for miniCRAN
-dir.create(pth <- file.path(tempdir(), "miniCRAN"))
+tmp.path <- tempdir()
+
 # Make repo for source and win.binary for each version of R we need to support
 makeRepoVersions <- function(a.version){
+  dir.create(pth <- file.path(tmp.path,a.version , "miniCRAN"),recursive = TRUE)
   makeRepo(list.with.dependancies , path = pth, repos = revolution, Rversion = a.version, type = c("source", "win.binary"))
 } 
 lapply(c("3.4","3.5","3.6"),FUN=makeRepoVersions)
 
 # List all files in miniCRAN
-package.file.list<- list.files(pth, recursive = TRUE, full.names = FALSE)
+package.file.list<- list.files(tmp.path, recursive = TRUE, full.names = FALSE)
 
 # Check for available packages
 pkgAvail(repos = pth, type = "win.binary")[, c(1:3, 5)]
