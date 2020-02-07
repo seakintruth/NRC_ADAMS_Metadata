@@ -15,7 +15,7 @@ list.with.dependancies <- pkgDep(corrected.list)
 # Create temporary folder for miniCRAN
 dir.create(pth <- file.path(tempdir(), "miniCRAN"))
 # Make repo for source and win.binary
-makeRepo(pkgList, path = pth, repos = revolution, type = c("source", "win.binary"))
+makeRepo(list.with.dependancies , path = pth, repos = revolution, type = c("source", "win.binary"))
 
 # List all files in miniCRAN
 package.file.list<- list.files(pth, recursive = TRUE, full.names = FALSE)
