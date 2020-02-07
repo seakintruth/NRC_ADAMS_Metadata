@@ -1,0 +1,7 @@
+pacman::p_load(miniCRAN)
+download.file("https://raw.githubusercontent.com/seakintruth/NRC_ADAMS_Metadata/master/canidates/package_list.txt","tmp.list.txt")
+new.package.list <- read.csv("tmp.list.txt")
+file.remove("tmp.list.txt")
+#chooseCRANmirror()
+corrected.list <- c("Package_Name",as.vector(new.package.list$Package_Name))
+list.with.dependancies <- pkgDep(corrected.list)
