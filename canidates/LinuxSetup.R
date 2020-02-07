@@ -14,14 +14,19 @@ corrected.list <- c("Package_Name",as.vector(new.package.list$Package_Name))
 list.with.dependancies <- pkgDep(corrected.list)
 # Create temporary folder for miniCRAN
 dir.create(pth <- file.path(tempdir(), "miniCRAN"))
-# Make repo for source and win.binary
-makeRepo(list.with.dependancies , path = pth, repos = revolution, type = c("source", "win.binary"))
+# Make repo for source and win.binary for each version of R we need to support
+makeRepoVersions <- function(a.version){
+  makeRepo(list.with.dependancies , path = pth, repos = revolution, Rversion = a.version, type = c("source", "win.binary"))
+} 
+lapply(c("3.4","3.5","3.6"),FUN=makeRepoVersions)
 
 # List all files in miniCRAN
 package.file.list<- list.files(pth, recursive = TRUE, full.names = FALSE)
 
 # Check for available packages
 pkgAvail(repos = pth, type = "win.binary")[, c(1:3, 5)]
+
+
 
 # Install packages with:
 #install.packages(pkgs, 
